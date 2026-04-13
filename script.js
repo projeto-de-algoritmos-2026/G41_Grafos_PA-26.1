@@ -8,11 +8,15 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 canvas.addEventListener("click", handleClick);
 
-canvas.width = 400;
-canvas.height = 400;
-const rows = 5
+canvas.width = 500;
+canvas.height = 500;
+const rows = 5 
 const cols = 5
 const cellSize = 80
+const gridWidth = cols * cellSize; // 400
+const gridHeight = rows * cellSize; // 400
+const offsetX = (canvas.width - gridWidth) / 2; // Center horizontally
+const offsetY = (canvas.height - gridHeight) / 2; // Center vertically
 // const grid = createRandomGrid(rows, cols)
 const grid = createCompleteGrid(rows, cols)
 let selectedCell;
@@ -29,8 +33,8 @@ function handleClick(event) {
 
   const rect = canvas.getBoundingClientRect();
 
-  const px = event.clientX - rect.left;
-  const py = event.clientY - rect.top;
+  const px = event.clientX - rect.left - offsetX;
+  const py = event.clientY - rect.top - offsetY;
 
   const j = Math.floor(px / cellSize);
   const i = Math.floor(py / cellSize);
@@ -66,13 +70,20 @@ function handleClick(event) {
 function loop(time){
     update(time);
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa canvas
+    
+    ctx.save();
+    ctx.translate(offsetX, offsetY);
 
     drawGrid(rows, cols, cellSize, ctx, grid);
     drawSelection(selectedCell, cellSize, ctx);
     drawArrows(ctx, grid, cellSize);
     drawMovingSquares(cellSize, movingSquares, ctx);
-    drawUI();
     drawEndScreen();
+    
+    ctx.restore();
+    
+    drawUI();
+    
     if(isGameFinished()){
       endGame();
     }
@@ -110,6 +121,7 @@ function startGame() {
 
 function drawUI() {
   const seconds = (elapsedTime / 1000).toFixed(2);
+  ctx.fillStyle = "black";
   ctx.fillText(`Tempo: ${seconds}s`, 10, 20);
 
   ctx.fillText(`Jogadas: ${moves}`, 10, 40);
@@ -126,21 +138,22 @@ function endGame() {
 }
 
 function calculateScore() {
-  const timeScore = Math.max(0, 1000 - elapsedTime*10);
+  const seconds = (elapsedTime / 1000); 
+  const timeScore = Math.max(0, 1000 - seconds * 10);
   const moveScore = Math.max(0, 500 - moves * 10);
 
-  return (timeScore + moveScore);
+  return Math.round(timeScore + moveScore);
 }
 
 function drawEndScreen() {
   if (gameRunning) return;
 
   ctx.fillStyle = "black";
-  ctx.fillText("Fim de jogo!", 150, 150);
+  ctx.fillText("Fim de jogo!", 175, 190);
 
   const score = calculateScore();
 
-  ctx.fillText(`Score: ${score}`, 150, 180);
+  ctx.fillText(`Score: ${score}`, 175, 220);
 }
 
 // Função auxiliar para criar o atraso
