@@ -74,6 +74,7 @@ export function drawSelection(selectedCell, cellSize, ctx) {
 
   ctx.fillStyle = "rgba(0, 150, 255, 0.3)";
   ctx.fillRect(x, y, cellSize, cellSize);
+  ctx.fillStyle = "black"
 }
 
 //----------- ANIMAÇÂO -------------------
