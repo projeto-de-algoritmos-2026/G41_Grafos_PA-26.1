@@ -2,6 +2,7 @@ console.log("Script.js iniciado.")
 
 import { drawGrid, drawArrows, drawSelection, drawMovingSquares } from './draw.js'
 import { createRandomGrid, getLineBlocking, createCompleteGrid } from './utilities.js';
+import { topologicalSolve } from './topological.js';
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -141,3 +142,48 @@ function drawEndScreen() {
 
   ctx.fillText(`Score: ${score}`, 150, 180);
 }
+
+// Função auxiliar para criar o atraso
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function solver(arr) {  
+  const speed = 3;
+
+  for (const square of arr) {
+    const row = square[0];
+    const col = square[1];
+    
+    // Verificamos a direção específica DESTE quadrado no grid
+    const dir = grid[row][col].direction;
+
+    let dx = 0;
+    let dy = 0;
+
+    if (dir === "RIGHT") dx = speed;
+    else if (dir === "LEFT") dx = -speed;
+    else if (dir === "DOWN") dy = speed;
+    else if (dir === "UP") dy = -speed;
+
+    // Adiciona ao array de animação
+    movingSquares.push({
+      x: col * cellSize,
+      y: row * cellSize,
+      dx,
+      dy
+    });
+
+    // Desativa a célula no grid
+    grid[row][col].active = false;
+    
+    // Incrementa o contador de movimentos para o UI refletir a solução
+    moves++; 
+
+    // Espera 0.5 segundo antes de lançar o próximo
+    await sleep(500);
+  }
+}
+
+document.getElementById("solveBtn").addEventListener("click", async () => {
+  const ordemResolucao = topologicalSolve(grid, rows, cols);
+  await solver(ordemResolucao);
+});
