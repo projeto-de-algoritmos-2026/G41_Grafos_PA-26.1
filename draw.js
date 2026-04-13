@@ -59,3 +59,16 @@ export function drawArrowShape(ctx, size) {
 
   ctx.stroke();
 }
+
+// ------------SELEÇÃO-------------------
+export function drawSelection(selectedCell, cellSize, ctx) {
+  if (!selectedCell) return;
+
+  const { i, j } = selectedCell;
+
+  const x = j * cellSize;
+  const y = i * cellSize;
+
+  ctx.fillStyle = "rgba(0, 150, 255, 0.3)";
+  ctx.fillRect(x, y, cellSize, cellSize);
+}
