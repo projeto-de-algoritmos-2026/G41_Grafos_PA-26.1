@@ -1,7 +1,7 @@
 console.log("Script.js iniciado.")
 
 import { drawGrid, drawArrows, drawSelection, drawMovingSquares } from './draw.js'
-import { createRandomGrid, getLineBlocking } from './utilities.js';
+import { createRandomGrid, getLineBlocking, createCompleteGrid } from './utilities.js';
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -12,7 +12,8 @@ canvas.height = 400;
 const rows = 5
 const cols = 5
 const cellSize = 80
-const grid = createRandomGrid(rows, cols)
+// const grid = createRandomGrid(rows, cols)
+const grid = createCompleteGrid(rows, cols)
 let selectedCell;
 let movingSquares = []
 
