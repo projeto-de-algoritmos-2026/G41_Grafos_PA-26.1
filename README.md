@@ -3,6 +3,9 @@
 Número da Lista: 41<br>
 Conteúdo da Disciplina: Grafos2<br>
 
+## Link do Vídeo de Explicação
+https://youtu.be/2SIu3ku0I-k
+
 ## Alunos
 |Matrícula | Aluno |
 | -- | -- |
